@@ -1,6 +1,6 @@
 {
-  "name": "threads",
-  "version": "1.7.0",
+  "name": "@yanfanvip/threads",
+  "version": "1.7.0-fixpath",
   "description": "Web workers & worker threads as simple as a function call",
   "license": "MIT",
   "main": "dist/index.js",
