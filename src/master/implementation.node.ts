@@ -87,7 +87,7 @@ function resolveScriptPath(scriptPath: string, baseURL?: string | undefined) {
 
   const workerFilePath = typeof __non_webpack_require__ === "function"
     ? __non_webpack_require__.resolve(makeRelative(scriptPath))
-    : eval("require").resolve(makeRelative(rebaseScriptPath(scriptPath, /[\/\\]worker_threads[\/\\]/)))
+    : eval("require").resolve(makeRelative(scriptPath))
 
   return workerFilePath
 }
