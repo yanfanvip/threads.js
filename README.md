@@ -28,7 +28,7 @@ You can find the old version 0.12 of threads.js on the [`v0` branch](https://git
 ## Installation
 
 ```
-npm install threads tiny-worker
+npm install @yanfanvip/threads tiny-worker
 ```
 
 *You only need to install the `tiny-worker` package to support node.js < 12. It's an optional dependency and used as a fallback if `worker_threads` are not available.*
@@ -221,6 +221,10 @@ Set it to `DEBUG=threads:*` to enable all the library's debug logging. To run it
 ```
 DEBUG=threads:* npm test
 ```
+
+## Electron
+Threads.js works with [Electron](https://electronjs.org/).
+See [Electron support](https://threads.js.org/getting-started#electron-support)
 
 ## License
 
