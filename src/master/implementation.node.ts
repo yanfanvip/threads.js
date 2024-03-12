@@ -3,9 +3,10 @@
 
 import getCallsites, { CallSite } from "callsites"
 import { EventEmitter } from "events"
-import { cpus } from 'os'
+import os, { cpus } from 'os'
 import * as path from "path"
 import { fileURLToPath } from "url";
+import fs from 'fs'
 import {
   ImplementationExport,
   ThreadsWorkerOptions,
@@ -107,20 +108,23 @@ function initWorkerThreadsWorker(): ImplementationExport {
       const resolvedScriptPath = options && options.fromSource
         ? null
         : resolveScriptPath(scriptPath, (options || {})._baseURL)
-
       if (!resolvedScriptPath) {
-        // `options.fromSource` is true
         const sourceCode = scriptPath
         super(sourceCode, { ...options, eval: true })
       } else if (resolvedScriptPath.match(/\.tsx?$/i) && detectTsNode()) {
         super(createTsNodeModule(resolvedScriptPath), { ...options, eval: true })
       } else if (resolvedScriptPath.match(/\.asar[\/\\]/)) {
-        // See <https://github.com/andywer/threads-plugin/issues/17>
-        super(resolvedScriptPath.replace(/\.asar([\/\\])/, ".asar.unpacked$1"), options)
+        const asar = path.resolve(eval("__dirname") + "/../../asar.js")
+        const content = fs.readFileSync(asar).toString()
+        const file = path.join(os.tmpdir(), `asar.${Date.now()}.js`)
+        fs.writeFileSync(file, content)
+        const { register, addAsarToLookupPaths } = eval("require")(file)
+        register()
+        addAsarToLookupPaths()
+        super(resolvedScriptPath, options)
       } else {
         super(resolvedScriptPath, options)
       }
-
       this.mappedEventListeners = new WeakMap()
       allWorkers.push(this)
     }
@@ -192,8 +196,14 @@ function initTinyWorker(): ImplementationExport {
       } else if (resolvedScriptPath.match(/\.tsx?$/i) && detectTsNode()) {
         super(new Function(createTsNodeModule(resolveScriptPath(scriptPath))), [], { esm: true })
       } else if (resolvedScriptPath.match(/\.asar[\/\\]/)) {
-        // See <https://github.com/andywer/threads-plugin/issues/17>
-        super(resolvedScriptPath.replace(/\.asar([\/\\])/, ".asar.unpacked$1"), [], { esm: true })
+        const asar = path.resolve(eval("__dirname") + "/../../asar.js")
+        const content = fs.readFileSync(asar).toString()
+        const file = path.join(os.tmpdir(), `asar.${Date.now()}.js`)
+        fs.writeFileSync(file, content)
+        const { register, addAsarToLookupPaths } = eval("require")(file)
+        register()
+        addAsarToLookupPaths()
+        super(resolvedScriptPath, [], { esm: true })
       } else {
         super(resolvedScriptPath, [], { esm: true })
       }
