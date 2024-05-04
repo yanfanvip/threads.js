@@ -1,6 +1,6 @@
 {
   "name": "@yanfanvip/threads",
-  "version": "1.7.0-fixpath",
+  "version": "1.7.2",
   "description": "Web workers & worker threads as simple as a function call",
   "license": "MIT",
   "main": "dist/index.js",
@@ -29,6 +29,10 @@
     "./observable": {
       "require": "./observable.js",
       "default": "./observable.mjs"
+    },
+    "./observable-promise": {
+      "require": "./observable-promise.js",
+      "default": "./observable-promise.mjs"
     },
     "./register": {
       "require": "./register.js",
